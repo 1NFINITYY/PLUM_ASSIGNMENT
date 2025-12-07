@@ -1,37 +1,26 @@
 // src/services/aiService.js
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import api from "./apiClient";
 
 // -------------------------------
 // CLASSIFY NEED
 // -------------------------------
 export async function classifyNeed(userNeed) {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/classify`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userNeed }),
-    });
+    const response = await api.post("/api/classify", { userNeed });
 
-    if (res.status === 429) {
-      let data = {};
-      try {
-        data = await res.json();
-      } catch {}
+    return response.data?.category || "Unknown";
+  } catch (err) {
+    const status = err?.response?.status;
+    const data = err?.response?.data;
+
+    if (status === 429) {
       return {
-        error: 'AI_LIMIT_EXCEEDED',
-        message: data.message || 'AI limit exceeded. Please try again later.',
+        error: "AI_LIMIT_EXCEEDED",
+        message: data?.message || "AI limit exceeded. Please try again later.",
       };
     }
 
-    if (!res.ok) {
-      throw new Error(`Failed to classify. Status: ${res.status}`);
-    }
-
-    const data = await res.json();
-    return data?.category || 'Unknown';
-  } catch {
-    return 'Unknown';
+    return "Unknown";
   }
 }
 
@@ -40,33 +29,25 @@ export async function classifyNeed(userNeed) {
 // -------------------------------
 export async function generateActionPlan(userNeed, benefit) {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/plan`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userNeed, benefit }),
-    });
+    const response = await api.post("/api/plan", { userNeed, benefit });
 
-    if (res.status === 429) {
-      let data = {};
-      try {
-        data = await res.json();
-      } catch {}
+    return Array.isArray(response.data?.steps)
+      ? response.data.steps
+      : [];
+  } catch (err) {
+    const status = err?.response?.status;
+    const data = err?.response?.data;
+
+    if (status === 429) {
       return {
-        error: 'AI_LIMIT_EXCEEDED',
-        message: data.message || 'AI limit exceeded. Please try again later.',
+        error: "AI_LIMIT_EXCEEDED",
+        message: data?.message || "AI limit exceeded. Please try again later.",
       };
     }
 
-    if (!res.ok) {
-      throw new Error(`Failed to generate plan. Status: ${res.status}`);
-    }
-
-    const data = await res.json();
-    return Array.isArray(data?.steps) ? data.steps : [];
-  } catch {
     return [
-      'Sorry, something went wrong while generating the plan.',
-      'Please try again later.',
+      "Sorry, something went wrong while generating the plan.",
+      "Please try again later.",
     ];
   }
 }
