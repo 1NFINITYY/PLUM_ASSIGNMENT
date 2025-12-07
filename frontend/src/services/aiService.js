@@ -1,43 +1,23 @@
 // src/services/aiService.js
 
-const API_BASE_URL = 'http://localhost:5000';
-
-// Helper to log nicely
-function log(...args) {
-  console.log('[aiService]', ...args);
-}
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // -------------------------------
 // CLASSIFY NEED
 // -------------------------------
 export async function classifyNeed(userNeed) {
-  log('classifyNeed called with:', userNeed);
-
   try {
-    const url = `${API_BASE_URL}/api/classify`;
-    const payload = { userNeed };
-
-    log('Sending request to:', url);
-    log('Request payload:', payload);
-
-    const res = await fetch(url, {
+    const res = await fetch(`${API_BASE_URL}/api/classify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ userNeed }),
     });
 
-    log('Response status:', res.status, 'ok:', res.ok);
-
-    // 🔥 If AI limit exceeded (from backend)
     if (res.status === 429) {
-      let data;
+      let data = {};
       try {
         data = await res.json();
-      } catch {
-        data = { message: 'AI limit exceeded.' };
-      }
-
-      log('AI limit exceeded response:', data);
+      } catch {}
       return {
         error: 'AI_LIMIT_EXCEEDED',
         message: data.message || 'AI limit exceeded. Please try again later.',
@@ -45,27 +25,12 @@ export async function classifyNeed(userNeed) {
     }
 
     if (!res.ok) {
-      const errorText = await res.text().catch(() => '(failed to read body)');
-      log('Non-OK response body:', errorText);
       throw new Error(`Failed to classify. Status: ${res.status}`);
     }
 
-    let data;
-    try {
-      data = await res.json();
-    } catch (e) {
-      log('Failed to parse JSON from /api/classify:', e);
-      throw new Error('Invalid JSON from /api/classify');
-    }
-
-    log('Parsed JSON from /api/classify:', data);
-
-    const category = data?.category || 'Unknown';
-    log('Final category returned to app:', category);
-
-    return category;
-  } catch (err) {
-    console.error('[aiService] classifyNeed error:', err);
+    const data = await res.json();
+    return data?.category || 'Unknown';
+  } catch {
     return 'Unknown';
   }
 }
@@ -74,34 +39,18 @@ export async function classifyNeed(userNeed) {
 // GENERATE ACTION PLAN
 // -------------------------------
 export async function generateActionPlan(userNeed, benefit) {
-  log('generateActionPlan called with:', { userNeed, benefit });
-
   try {
-    const url = `${API_BASE_URL}/api/plan`;
-    const payload = { userNeed, benefit };
-
-    log('Sending request to:', url);
-    log('Request payload:', payload);
-
-    const res = await fetch(url, {
+    const res = await fetch(`${API_BASE_URL}/api/plan`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ userNeed, benefit }),
     });
 
-    log('Response status:', res.status, 'ok:', res.ok);
-
-    // 🔥 AI limit exceeded
     if (res.status === 429) {
-      let data;
+      let data = {};
       try {
         data = await res.json();
-      } catch {
-        data = { message: 'AI limit exceeded.' };
-      }
-
-      log('AI limit exceeded response from /api/plan:', data);
-
+      } catch {}
       return {
         error: 'AI_LIMIT_EXCEEDED',
         message: data.message || 'AI limit exceeded. Please try again later.',
@@ -109,31 +58,14 @@ export async function generateActionPlan(userNeed, benefit) {
     }
 
     if (!res.ok) {
-      const errorText = await res.text().catch(() => '(failed to read body)');
-      log('Non-OK response from /api/plan:', errorText);
       throw new Error(`Failed to generate plan. Status: ${res.status}`);
     }
 
-    let data;
-    try {
-      data = await res.json();
-    } catch (e) {
-      log('Failed to parse JSON from /api/plan:', e);
-      throw new Error('Invalid JSON from /api/plan');
-    }
-
-    log('Parsed JSON from /api/plan:', data);
-
-    const steps = Array.isArray(data?.steps) ? data.steps : [];
-    log('Final steps returned to app:', steps);
-
-    return steps;
-  } catch (err) {
-    console.error('[aiService] generateActionPlan error:', err);
-
+    const data = await res.json();
+    return Array.isArray(data?.steps) ? data.steps : [];
+  } catch {
     return [
       'Sorry, something went wrong while generating the plan.',
-      'Check backend logs for details.',
       'Please try again later.',
     ];
   }
