@@ -27,10 +27,8 @@
 
     Live Deployment Links
 
-    Frontend (Vercel):
-    Backend (Render):
-
-    (Add your URLs above)
+    Frontend (Vercel):https://plum-assignment-nu.vercel.app/
+    Backend (Render):https://plum-assignment-1.onrender.com
 
 2. Problem Understanding
 
@@ -154,15 +152,13 @@
 
     Add:
 
-    Screen 1 – Input problem
+    Screen 1 – Input problem 
 
     Screen 2 – AI Classification Loading
 
     Screen 3 – Benefit Selection
 
     Screen 4 – Action Plan
-
-    (Upload images/videos to GitHub and link them.)
 
 6. Known Issues & Improvements
 
