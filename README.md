@@ -154,13 +154,15 @@
 
     Screen 1 – Input problem (https://github.com/1NFINITYY/PLUM_ASSIGNMENT/blob/main/assets/image.png)
 
-    Screen 2 – AI Classification Loading ()
+    Screen 2 – AI Classification Loading
+   (https://github.com/1NFINITYY/PLUM_ASSIGNMENT/blob/main/assets/Screenshot%202025-12-07%20150701.png)
 
-    Screen 3 – Benefit Selection ()
+    Screen 3 – Benefit Selection (https://github.com/1NFINITYY/PLUM_ASSIGNMENT/blob/main/assets/Screenshot%202025-12-07%20150738.png)
 
-    Screen 4 – Action Plan ()
+    Screen 4 – Action Plan
+   (https://github.com/1NFINITYY/PLUM_ASSIGNMENT/blob/main/assets/Screenshot%202025-12-07%20150748.png)
 
-6. Known Issues & Improvements
+7. Known Issues & Improvements
 
     Known Issues
 
@@ -182,7 +184,7 @@
 
     Better analytics (user flow, drop-off rates)
 
-7. Bonus Work
+8. Bonus Work
 
     The following features were implemented beyond basic requirements:
 
