@@ -152,13 +152,13 @@
 
     Add:
 
-    Screen 1 – Input problem 
+    Screen 1 – Input problem (https://github.com/1NFINITYY/PLUM_ASSIGNMENT/blob/main/assets/image.png)
 
-    Screen 2 – AI Classification Loading
+    Screen 2 – AI Classification Loading ()
 
-    Screen 3 – Benefit Selection
+    Screen 3 – Benefit Selection ()
 
-    Screen 4 – Action Plan
+    Screen 4 – Action Plan ()
 
 6. Known Issues & Improvements
 
